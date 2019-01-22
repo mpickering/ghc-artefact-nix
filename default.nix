@@ -1,4 +1,7 @@
+{ branch ? "master", fork ? "ghc" }:
 let
   np = import <nixpkgs> {};
-  ghc = np.callPackage ./artifact.nix {} {};
-in np.mkShell { buildInputs = [ghc np.haskellPackages.cabal-install ]; }
+  ghc = self: ref: self.callPackage ./artifact.nix {} ref;
+  ol = self: super: { ghcHEAD = ghc self { inherit fork branch; }; };
+in
+  import <nixpkgs> { overlays = [ol]; }

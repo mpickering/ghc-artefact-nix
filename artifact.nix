@@ -1,7 +1,7 @@
 { stdenv
 , fetchurl, perl, gcc, llvm_39
 , ncurses5, gmp, glibc, libiconv
-}: {ref ? "master" }:
+}: {branch ? "master", fork ? "ghc" }:
 
 # Prebuilt only does native
 assert stdenv.targetPlatform == stdenv.hostPlatform;
@@ -21,7 +21,7 @@ let
     else
       "${stdenv.lib.getLib glibc}/lib/ld-linux*";
 
-  mkUrl = job: "https://gitlab.haskell.org/ghc/ghc/-/jobs/artifacts/${ref}/raw/ghc.tar.xz?job=${job}";
+  mkUrl = job: "https://gitlab.haskell.org/${fork}/ghc/-/jobs/artifacts/${branch}/raw/ghc.tar.xz?job=${job}";
 
 in
 
