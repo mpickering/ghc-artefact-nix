@@ -33,7 +33,7 @@ nix run -f https://github.com/mpickering/ghc-artefact-nix/archive/master.tar.gz 
 and then test the compiler locally.
 
 
-# `ghc-head-from` script
+## `ghc-head-from` script
 
 The most convenient way to get into the shell is to use the `ghc-head-from` script
 which has two modes of operation.
@@ -47,7 +47,7 @@ Note that this script is broken on `nix-2.2` due to a [regression](https://githu
 This is an example of fetching the artefacts for MR 180.
 
 ```
-ghc-head-from 180
+> ghc-head-from 180
 Fetching from MR: doc: user's guide pragma fixes
 Fetching artefact from brprice/wip/doc-pragma-fixes
 ...
@@ -56,8 +56,9 @@ Fetching artefact from brprice/wip/doc-pragma-fixes
 or fetching an artefact from HEAD.
 
 ```
-ghc-head-from
+> ghc-head-from
 Fetching artefact from ghc/master
+...
 ```
 
 If you use [`NUR`](https://github.com/nix-community/NUR) then you can access
