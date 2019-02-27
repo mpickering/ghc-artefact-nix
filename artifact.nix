@@ -1,7 +1,7 @@
 { stdenv
-, fetchurl, perl, gcc, llvm_39
+, perl, gcc, llvm_39
 , ncurses5, gmp, glibc, libiconv
-}: {branch ? "master", fork ? "ghc" }:
+}: { bindistTarball }:
 
 # Prebuilt only does native
 assert stdenv.targetPlatform == stdenv.hostPlatform;
@@ -21,8 +21,6 @@ let
     else
       "${stdenv.lib.getLib glibc}/lib/ld-linux*";
 
-  mkUrl = job: "https://gitlab.haskell.org/${fork}/ghc/-/jobs/artifacts/${branch}/raw/ghc.tar.xz?job=${job}";
-
 in
 
 stdenv.mkDerivation rec {
@@ -30,21 +28,7 @@ stdenv.mkDerivation rec {
 
   name = "ghc-${version}-binary";
 
-  src = builtins.fetchurl ({
-    "i386-linux"   = {
-      url = mkUrl "validate-i386-linux-deb9";
-    };
-    "x86_64-linux" = {
-      url = mkUrl "validate-x86_64-linux-deb8";
-    };
-    "aarch64-linux" = {
-      url = mkUrl "validate-aarch64-linux-deb9";
-    };
-    "x86_64-darwin" = {
-      url = mkUrl "validate-x86_64-darwin";
-    };
-  }.${stdenv.hostPlatform.system}
-    or (throw "cannot bootstrap GHC on this platform"));
+  src = bindistTarball;
 
   nativeBuildInputs = [ perl ];
   buildInputs = stdenv.lib.optionals (stdenv.targetPlatform.isAarch32 || stdenv.targetPlatform.isAarch64) [ llvm_39 ];
