@@ -1,4 +1,4 @@
-{ stdenv
+{ stdenv, lib
 , perl, gcc, llvm_39
 , ncurses5, gmp, glibc, libiconv
 }: { bindistTarball }:
@@ -21,12 +21,28 @@ let
     else
       "${stdenv.lib.getLib glibc}/lib/ld-linux*";
 
+  # Figure out version of bindist
+  version =
+    let
+      helper = stdenv.mkDerivation {
+        name = "bindist-version";
+        src = bindistTarball;
+        nativeBuildInputs = [ gcc perl ];
+        buildPhase = ''
+          make show VALUE=ProjectVersion > version
+        '';
+        installPhase = ''
+          source version
+          echo -n "$ProjectVersion" > $out
+        '';
+      };
+    in lib.readFile helper;
 in
 
 stdenv.mkDerivation rec {
-  version = "8.7.0";
+  inherit version;
 
-  name = "ghc-${version}-binary";
+  name = "ghc-${version}";
 
   src = bindistTarball;
 
@@ -143,7 +159,7 @@ stdenv.mkDerivation rec {
   passthru = {
     targetPrefix = "";
     enableShared = true;
-    haskellCompilerName = "ghc-999.9";
+    haskellCompilerName = "ghc-${version}";
   };
 
   meta.license = stdenv.lib.licenses.bsd3;
