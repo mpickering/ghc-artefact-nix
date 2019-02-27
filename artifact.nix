@@ -1,15 +1,20 @@
-{ stdenv, lib
+{ stdenv, lib, patchelfUnstable
 , perl, gcc, llvm_39
-, ncurses5, gmp, glibc, libiconv
-}: { bindistTarball }:
+, ncurses6, ncurses5, gmp, glibc, libiconv
+}: { bindistTarball, ncursesVersion }:
 
 # Prebuilt only does native
 assert stdenv.targetPlatform == stdenv.hostPlatform;
 
 let
   libPath = stdenv.lib.makeLibraryPath ([
-    ncurses5 gmp
+    selectedNcurses gmp
   ] ++ stdenv.lib.optional (stdenv.hostPlatform.isDarwin) libiconv);
+
+  selectedNcurses = {
+    "5" = ncurses5;
+    "6" = ncurses6;
+  }."${ncursesVersion}";
 
   libEnvVar = stdenv.lib.optionalString stdenv.hostPlatform.isDarwin "DY"
     + "LD_LIBRARY_PATH";
@@ -93,10 +98,11 @@ stdenv.mkDerivation rec {
           -exec sed -i "s@extra-lib-dirs: @extra-lib-dirs: ${libiconv}/lib@" {} \;
     '' +
     # Rename needed libraries and binaries, fix interpreter
+    # N.B. Use patchelfUnstable due to https://github.com/NixOS/patchelf/pull/85
     stdenv.lib.optionalString stdenv.isLinux ''
-      find . -type f -perm -0100 -exec patchelf \
-          --replace-needed libncurses${stdenv.lib.optionalString stdenv.is64bit "w"}.so.5 libncurses.so \
-          --replace-needed libtinfo.so libtinfo.so.5 \
+      find . -type f -perm -0100 -exec ${patchelfUnstable}/bin/patchelf \
+          --replace-needed libncurses${stdenv.lib.optionalString stdenv.is64bit "w"}.so.${ncursesVersion} libncurses.so \
+          --replace-needed libtinfo.so.${ncursesVersion} libncurses.so.${ncursesVersion} \
           --interpreter ${glibcDynLinker} {} \;
 
       sed -i "s|/usr/bin/perl|perl\x00        |" ghc*/ghc/stage2/build/tmp/ghc-stage2
