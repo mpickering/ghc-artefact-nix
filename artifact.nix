@@ -143,6 +143,7 @@ stdenv.mkDerivation rec {
   passthru = {
     targetPrefix = "";
     enableShared = true;
+    haskellCompilerName = "ghc-999.9";
   };
 
   meta.license = stdenv.lib.licenses.bsd3;
