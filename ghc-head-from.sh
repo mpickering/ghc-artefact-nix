@@ -6,7 +6,7 @@ then
   PARSED_BRANCH=$(echo $REQ | jq -r '.source_branch')
   PARSED_PROJECT=$(echo $REQ | jq -r '.source_project_id')
   PROJ_REQ=$(curl -s https://gitlab.haskell.org/api/v4/projects/$PARSED_PROJECT)
-	PARSED_FORK=$(echo $PROJ_REQ | jq -r '.namespace.name')
+	PARSED_FORK=$(echo $PROJ_REQ | jq -r '.namespace.path')
 	MR_TITLE=$(echo $REQ | jq -r '.title')
 	echo "Fetching from MR: $MR_TITLE"
 fi
@@ -17,4 +17,4 @@ echo "Fetching artefact from $FORK/$BRANCH"
 nix run -f https://github.com/mpickering/ghc-artefact-nix/archive/master.tar.gz \
   --argstr fork $FORK \
   --argstr branch $BRANCH \
-   ghcHEAD cabal-install
+   ghcHEAD cabal-install gcc binutils-unwrapped
