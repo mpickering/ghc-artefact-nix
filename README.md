@@ -71,4 +71,13 @@ Nesting shells doesn't work very well in Nix so it's probably better to add
 the attribute to your `configuration.nix` file and install it globally.
 
 
+## Releases
 
+In addition to the ability to grab binary distributions from GitLab, this
+repository also includes `releases.nix`, which packages a number of official
+release tarballs. For instance, one could drop into a shell with 8.10.1-alpha2
+available with,
+
+```
+nix run -f releases.nix ghc_8_10_1_alpha2
+```
