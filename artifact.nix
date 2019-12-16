@@ -60,6 +60,8 @@ stdenv.mkDerivation rec {
   # the final install location/
   ${libEnvVar} = libPath;
 
+  preferLocalBuild = true;
+
   postUnpack =
     # GHC has dtrace probes, which causes ld to try to open /usr/lib/libdtrace.dylib
     # during linking
