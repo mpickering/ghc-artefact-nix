@@ -6,7 +6,7 @@ let
   gitlabConfig = self: (self.callPackage ./gitlab-artifact.nix {} {
                     inherit fork branch;
                   });
-  directConfig = { bindistTarball = builtins.fetchurl url;
+  directConfig = { bindistTarball = if builtins.typeOf url == "path" then url else builtins.fetchurl url;
                    inherit ncursesVersion; };
 
   config = self: if url == null then (gitlabConfig self) else directConfig;
