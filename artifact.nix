@@ -1,5 +1,5 @@
 { stdenv, lib, patchelfUnstable
-, perl, gcc, llvm_39
+, perl, gcc, llvm
 , ncurses6, ncurses5, gmp, glibc, libiconv
 }: { bindistTarball, ncursesVersion }:
 
@@ -54,7 +54,7 @@ stdenv.mkDerivation rec {
   src = bindistTarball;
 
   nativeBuildInputs = [ perl ];
-  buildInputs = stdenv.lib.optionals (stdenv.targetPlatform.isAarch32 || stdenv.targetPlatform.isAarch64) [ llvm_39 ];
+  buildInputs = stdenv.lib.optionals (stdenv.targetPlatform.isAarch32 || stdenv.targetPlatform.isAarch64) [ llvm ];
 
   # Cannot patchelf beforehand due to relative RPATHs that anticipate
   # the final install location/
