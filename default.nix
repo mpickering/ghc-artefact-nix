@@ -1,6 +1,5 @@
-{ branch ? "master", fork ? "ghc", url ? null, ncursesVersion ? "6" }:
+{ branch ? "master", fork ? "ghc", url ? null, ncursesVersion ? "6", nixpkgsSrc ? <nixpkgs> }:
 let
-  np = import <nixpkgs> {};
   ghc = self: ref: self.callPackage ./artifact.nix {} ref;
 
   gitlabConfig = self: (self.callPackage ./gitlab-artifact.nix {} {
@@ -17,4 +16,4 @@ let
       ghc-head-from = self.callPackage ./ghc-head-from.nix {};
     };
 in
-  import <nixpkgs> { overlays = [ol]; }
+  import nixpkgsSrc { overlays = [ol]; }
