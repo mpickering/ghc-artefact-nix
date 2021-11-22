@@ -1,5 +1,5 @@
-{ stdenv, lib, patchelfUnstable
-, perl, gcc, llvm
+{ stdenv, lib, patchelf
+, perl, gcc, gcc-unwrapped, llvm
 , ncurses6, ncurses5, gmp, glibc, libiconv
 }: { bindistTarball, ncursesVersion }:
 
@@ -104,10 +104,15 @@ stdenv.mkDerivation rec {
     # Rename needed libraries and binaries, fix interpreter
     # N.B. Use patchelfUnstable due to https://github.com/NixOS/patchelf/pull/85
     lib.optionalString stdenv.isLinux ''
-      find . -type f -perm -0100 -exec ${patchelfUnstable}/bin/patchelf \
+      find . -type f -perm -0100 -exec ${patchelf}/bin/patchelf \
           --replace-needed libncurses${lib.optionalString stdenv.is64bit "w"}.so.${ncursesVersion} libncurses.so \
           --replace-needed libtinfo.so.${ncursesVersion} libncurses.so.${ncursesVersion} \
           --interpreter ${glibcDynLinker} {} \;
+
+      # text-2.0 links against libstdc++
+      find . -type f -perm -0100 -exec ${patchelf}/bin/patchelf \
+          --add-rpath ${gcc-unwrapped.lib}/lib \
+          {} \;
 
       sed -i "s|/usr/bin/perl|perl\x00        |" ghc*/ghc/stage2/build/tmp/ghc-stage2
       sed -i "s|/usr/bin/gcc|gcc\x00        |" ghc*/ghc/stage2/build/tmp/ghc-stage2
