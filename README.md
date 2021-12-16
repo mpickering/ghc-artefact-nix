@@ -39,7 +39,7 @@ The most convenient way to get into the shell is to use the `ghc-head-from` scri
 which has three modes of operation.
 
 1. Specifying a MR by its number as the first argument fetches artefacts from that MR.
-2. Specifying a link to a (fedora27) bindist uses that bindist.
+2. Specifying a link to a (fedora27/33) bindist uses that bindist.
 2. Omitting the argument means we fetch the artefact from `ghc/master`.
 
 

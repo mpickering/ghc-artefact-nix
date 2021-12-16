@@ -8,13 +8,13 @@ let
   # ncursesVersion: the ncurses version which the bindist expects
   configs = {
     "i386-linux"   = {
-      job = "validate-i386-linux-fedora27";
-      tarball = "ghc-x86_64-fedora27-linux.tar.gz";
+      job = "validate-i386-linux-fedora33";
+      tarball = "ghc-x86_64-fedora33-linux.tar.gz";
       ncursesVersion = "6";
     };
     "x86_64-linux" = {
-      job = "validate-x86_64-linux-fedora27";
-      tarball = "ghc-x86_64-fedora27-linux.tar.xz";
+      job = "validate-x86_64-linux-fedora33";
+      tarball = "ghc-x86_64-fedora33-linux.tar.xz";
       ncursesVersion = "6";
     };
     "aarch64-linux" = {
