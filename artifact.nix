@@ -114,8 +114,8 @@ stdenv.mkDerivation rec {
           --add-rpath ${gcc-unwrapped.lib}/lib \
           {} \;
 
-      sed -i "s|/usr/bin/perl|perl\x00        |" ghc*/ghc/stage2/build/tmp/ghc-stage2
-      sed -i "s|/usr/bin/gcc|gcc\x00        |" ghc*/ghc/stage2/build/tmp/ghc-stage2
+      sed -i "s|/usr/bin/perl|perl\x00        |" ghc*/ghc/stage2/build/tmp/ghc-stage2 || true
+      sed -i "s|/usr/bin/gcc|gcc\x00        |" ghc*/ghc/stage2/build/tmp/ghc-stage2 || true
     '';
 
   configurePlatforms = [ ];
@@ -162,6 +162,9 @@ stdenv.mkDerivation rec {
         #sed -i "s/extra-libraries: *tinfo/extra-libraries: ncurses\n/" $f
         echo "library-dirs: ${selectedNcurses}/lib" >> $f
         echo "dynamic-library-dirs: ${selectedNcurses}/lib" >> $f
+        echo "Fixing gmp dependency in $f..."
+        echo "library-dirs: ${gmp.out}/lib" >> $f
+        echo "dynamic-library-dirs: ${gmp.out}/lib" >> $f
     done
     $out/bin/ghc-pkg recache
   '';
