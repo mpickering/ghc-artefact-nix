@@ -1,6 +1,6 @@
 { stdenv, lib, patchelf
 , perl, gcc, gcc-unwrapped, llvm
-, ncurses6, ncurses5, gmp, glibc, libiconv
+, ncurses6, ncurses5, gmp, glibc, libiconv, numactl
 }: { bindistTarball, ncursesVersion }:
 
 # Prebuilt only does native
@@ -8,7 +8,7 @@ assert stdenv.targetPlatform == stdenv.hostPlatform;
 
 let
   libPath = lib.makeLibraryPath ([
-    selectedNcurses gmp
+    selectedNcurses gmp numactl
   ] ++ lib.optional (stdenv.hostPlatform.isDarwin) libiconv);
 
   selectedNcurses = {
@@ -167,6 +167,9 @@ stdenv.mkDerivation rec {
         echo "Fixing gmp dependency in $f..."
         echo "library-dirs: ${gmp.out}/lib" >> $f
         echo "dynamic-library-dirs: ${gmp.out}/lib" >> $f
+        echo "Fixing numa dependency in $f..."
+        echo "library-dirs: ${numactl.out}/lib" >> $f
+        echo "dynamic-library-dirs: ${numactl.out}/lib" >> $f
     done
     $out/bin/ghc-pkg recache
   '';
