@@ -13,8 +13,8 @@ let
       ncursesVersion = "6";
     };
     "x86_64-linux" = {
-      job = "x86_64-linux-fedora33-perf";
-      tarball = "ghc-x86_64-linux-fedora33-perf.tar.xz";
+      job = "x86_64-linux-fedora33-release";
+      tarball = "ghc-x86_64-linux-fedora33-release.tar.xz";
       ncursesVersion = "6";
     };
     "aarch64-linux" = {
